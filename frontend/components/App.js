@@ -5,9 +5,11 @@ import LoginForm from './LoginForm'
 import Message from './Message'
 import ArticleForm from './ArticleForm'
 import Spinner from './Spinner'
+import { AuthRoute } from '../axios/index'
 
 const articlesUrl = 'http://localhost:9000/api/articles'
 const loginUrl = 'http://localhost:9000/api/login'
+const baseUrl = 'http://localhost:9000/api'
 
 export default function App() {
   // ✨ MVP can be achieved with these states
@@ -18,8 +20,8 @@ export default function App() {
 
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate()
-  const redirectToLogin = () => { /* ✨ implement */ }
-  const redirectToArticles = () => { /* ✨ implement */ }
+  const redirectToLogin = () => { navigate("/") }
+  const redirectToArticles = () => { navigate("/articles") }
 
   const logout = () => {
     // ✨ implement
@@ -27,6 +29,12 @@ export default function App() {
     // and a message saying "Goodbye!" should be set in its proper state.
     // In any case, we should redirect the browser back to the login screen,
     // using the helper above.
+    const token = localStorage.getItem("token")
+    if(token){
+      localStorage.removeItem("token")
+      setMessage("Goodbye!")
+    }
+    return redirectToLogin()
   }
 
   const login = ({ username, password }) => {
@@ -36,6 +44,9 @@ export default function App() {
     // On success, we should set the token to local storage in a 'token' key,
     // put the server success message in its proper state, and redirect
     // to the Articles screen. Don't forget to turn off the spinner!
+    setMessage("")
+    setSpinnerOn(true)
+    
   }
 
   const getArticles = () => {
@@ -79,11 +90,11 @@ export default function App() {
         </nav>
         <Routes>
           <Route path="/" element={<LoginForm />} />
-          <Route path="articles" element={
-            <>
+          <Route path="/articles" element={
+            <AuthRoute>
               <ArticleForm />
               <Articles />
-            </>
+            </AuthRoute>
           } />
         </Routes>
         <footer>Bloom Institute of Technology 2022</footer>
