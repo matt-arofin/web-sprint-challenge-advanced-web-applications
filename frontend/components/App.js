@@ -5,7 +5,7 @@ import LoginForm from './LoginForm'
 import Message from './Message'
 import ArticleForm from './ArticleForm'
 import Spinner from './Spinner'
-import { AuthRoute } from '../axios/index'
+import { AuthRoute, customApi } from '../axios/index'
 
 const articlesUrl = 'http://localhost:9000/api/articles'
 const loginUrl = 'http://localhost:9000/api/login'
@@ -46,7 +46,9 @@ export default function App() {
     // to the Articles screen. Don't forget to turn off the spinner!
     setMessage("")
     setSpinnerOn(true)
-    
+    customApi().post('/login', {username, password})
+      .then(res => console.log(res))
+      .catch(err => console.error({err}))
   }
 
   const getArticles = () => {

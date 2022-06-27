@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PT from 'prop-types'
-import axios from 'axios'
+import { customApi } from '../axios/index'
 
 const initialFormValues = {
   username: '',
@@ -19,10 +19,10 @@ export default function LoginForm(props) {
   const onSubmit = evt => {
     evt.preventDefault()
     // ✨ implement
-    axios.post('http://localhost:9000/api/login', values)
+    customApi().post('/login', values)
       .then(res => {
         console.log(res.data)
-        localStorage.setItem('token', res.data.token)
+        // localStorage.setItem('token', res.data.token)
         setMessage(res.data.message)
       })
   }
