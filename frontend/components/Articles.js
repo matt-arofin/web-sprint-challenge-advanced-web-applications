@@ -15,6 +15,8 @@ export default function Articles(props) {
     getArticles()
   }, [])
 
+  
+
   return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions
     // and use the articles prop to generate articles

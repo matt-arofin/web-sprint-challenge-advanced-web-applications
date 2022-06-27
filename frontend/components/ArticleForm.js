@@ -6,19 +6,19 @@ const initialFormValues = { title: '', text: '', topic: '' }
 export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues)
   // ✨ where are my props? Destructure them here
-  const { postArticle, updateArticle } = props
+  const { articles, postArticle, updateArticle, currentArticleId } = props
 
-  const currentArticle = values
+  // const currentArticle = articles.map(art => )
 
   useEffect(() => {
     // ✨ implement
     // Every time the `currentArticle` prop changes, we should check it for truthiness:
     // if it's truthy, we should set its title, text and topic into the corresponding
     // values of the form. If it's not, we should reset the form back to initial values.
-    if(currentArticle){
-      setValues(currentArticle)
-    } else{ setValues(initialFormValues)}
-  }, [currentArticle])
+    // if(articles.includes(currentArticleId)){
+    //   // setValues(currentArticle)
+    // } else{ setValues(initialFormValues)}
+  }, [currentArticleId])
 
   const onChange = evt => {
     const { id, value } = evt.target

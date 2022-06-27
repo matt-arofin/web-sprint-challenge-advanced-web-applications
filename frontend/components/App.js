@@ -49,9 +49,9 @@ export default function App() {
     customAxios().post('/login', {username, password})
       .then(res => {
         setMessage(res.data.message)
-        console.log("Login Success:",res.data.message)
+        // console.log("Login Success:",res.data.message)
         localStorage.setItem("token", res.data.token)
-        console.log("Login success message state:", message)
+        // console.log("Login success message state:", message)
         redirectToArticles()
         setSpinnerOn(false)
       })
@@ -88,7 +88,7 @@ export default function App() {
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
-    customAxios().post('/article', article)
+    customAxios().post('/articles', article)
       .then(res => {
         console.log(res)
       })
@@ -98,7 +98,7 @@ export default function App() {
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
-    customAxios().put('/article', {article_id, article})
+    customAxios().put(`/articles/${article_id}`, article)
       .then(res => {
         console.log(res)
       })
@@ -107,7 +107,7 @@ export default function App() {
 
   const deleteArticle = article_id => {
     // ✨ implement
-    customAxios().delete('/article', article_id)
+    customAxios().delete(`/articles/${article_id}`)
       .then(res => {
         console.log(res)
       })
@@ -117,7 +117,7 @@ export default function App() {
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
-      <Spinner spinnerOn={spinnerOn}/>
+      <Spinner on={spinnerOn}/>
       <Message message={message}/>
       <button id="logout" onClick={logout}>Logout from app</button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}
