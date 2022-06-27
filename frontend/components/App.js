@@ -5,11 +5,11 @@ import LoginForm from './LoginForm'
 import Message from './Message'
 import ArticleForm from './ArticleForm'
 import Spinner from './Spinner'
-import { AuthRoute, customApi } from '../axios/index'
+import { AuthRoute, customAxios } from '../axios/index'
 
-const articlesUrl = 'http://localhost:9000/api/articles'
-const loginUrl = 'http://localhost:9000/api/login'
-const baseUrl = 'http://localhost:9000/api'
+// const articlesUrl = 'http://localhost:9000/api/articles'
+// const loginUrl = 'http://localhost:9000/api/login'
+// const baseUrl = 'http://localhost:9000/api'
 
 export default function App() {
   // ✨ MVP can be achieved with these states
@@ -46,10 +46,17 @@ export default function App() {
     // to the Articles screen. Don't forget to turn off the spinner!
     setMessage("")
     setSpinnerOn(true)
-    customApi().post('/login', {username, password})
-      .then(res => console.log(res))
+    customAxios().post('/login', {username, password})
+      .then(res => {
+        setMessage(res.data.message)
+        console.log("Login Success:",res.data.message)
+        localStorage.setItem("token", res.data.token)
+        console.log("Login success message state:", message)
+        redirectToArticles()
+        setSpinnerOn(false)
+      })
       .catch(err => console.error({err}))
-  }
+    }
 
   const getArticles = () => {
     // ✨ implement
@@ -60,6 +67,20 @@ export default function App() {
     // If something goes wrong, check the status of the response:
     // if it's a 401 the token might have gone bad, and we should redirect to login.
     // Don't forget to turn off the spinner!
+    setMessage("")
+    setSpinnerOn(true)
+    customAxios().get('/articles')
+      .then(res => {
+        console.log(res.data.articles)
+        setArticles(res.data.articles)
+        console.log("Current articles:", articles)
+        setMessage(res.data.message)
+        setSpinnerOn(false)
+      })
+      .catch(err => {
+        console.error({err})
+        redirectToLogin()
+      })
   }
 
   const postArticle = article => {
@@ -67,22 +88,37 @@ export default function App() {
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
+    customAxios().post('/article', article)
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => console.error({err}))
   }
 
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
+    customAxios().put('/article', {article_id, article})
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => console.error({err}))
   }
 
   const deleteArticle = article_id => {
     // ✨ implement
+    customAxios().delete('/article', article_id)
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => console.error({err}))
   }
 
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
-      <Spinner />
-      <Message />
+      <Spinner spinnerOn={spinnerOn}/>
+      <Message message={message}/>
       <button id="logout" onClick={logout}>Logout from app</button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}
         <h1>Advanced Web Applications</h1>
@@ -91,11 +127,11 @@ export default function App() {
           <NavLink id="articlesScreen" to="/articles">Articles</NavLink>
         </nav>
         <Routes>
-          <Route path="/" element={<LoginForm />} />
+          <Route path="/" element={<LoginForm login={login} />} />
           <Route path="/articles" element={
             <AuthRoute>
-              <ArticleForm />
-              <Articles />
+              <ArticleForm postArticle={postArticle} updateArticle={updateArticle} /* currentArticle={currentArticle} */ setCurrentArticleId={setCurrentArticleId}/>
+              <Articles articles={articles} getArticles={getArticles} deleteArticle={deleteArticle} currentArticleId={currentArticleId} setCurrentArticleId={setCurrentArticleId}/>
             </AuthRoute>
           } />
         </Routes>
