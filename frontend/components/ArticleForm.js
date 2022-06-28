@@ -6,7 +6,7 @@ const initialFormValues = { title: '', text: '', topic: '' }
 export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues)
   // ✨ where are my props? Destructure them here
-  const { postArticle, updateArticle, currentArticleId, setCurrentArticleId, currentArticle } = props
+  const { postArticle, updateArticle, setCurrentArticleId, currentArticle } = props
 
 
   useEffect(() => {
@@ -15,7 +15,10 @@ export default function ArticleForm(props) {
     // if it's truthy, we should set its title, text and topic into the corresponding
     // values of the form. If it's not, we should reset the form back to initial values.
     if(currentArticle){
-      setValues(currentArticle)
+      // let title = currentArticle.title
+      // let text = currentArticle.text
+      // let topic = currentArticle.topic
+      setValues({title: currentArticle.title, text: currentArticle.text, topic: currentArticle.topic})
     } else{ setValues(initialFormValues)}
   }, [currentArticle])
 
@@ -29,16 +32,17 @@ export default function ArticleForm(props) {
     // ✨ implement
     // We must submit a new post or update an existing one,
     // depending on the truthyness of the `currentArticle` prop.
-    currentArticle ? updateArticle({currentArticleId, values}) : postArticle(values)
+    currentArticle ? updateArticle(currentArticle.article_id, values) : postArticle(values)
     setValues(initialFormValues)
+    setCurrentArticleId(null)
   }
 
   const isDisabled = () => {
     // ✨ implement
     // Make sure the inputs have some values
-    if(values.title.trim().length < 1 || values.text.trim().length < 1 || values.topic){
+    if(values.title.trim().length < 1 || values.text.trim().length < 1 || !values.topic){
       return true
-    } else{ return false }
+    } else { return false }
   }
 
   const cancelEdit = () => {

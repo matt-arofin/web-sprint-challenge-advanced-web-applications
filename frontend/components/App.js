@@ -101,12 +101,22 @@ export default function App() {
 
 
 
-  const updateArticle = ({ article_id, article }) => {
+  const updateArticle = ( article_id, article ) => {
     // ✨ implement
     // You got this!
+    console.log(article_id, article)
     customAxios().put(`/articles/${article_id}`, article)
       .then(res => {
-        console.log(res)
+        // console.log(res)
+        setMessage(res.data.message)
+        setArticles(articles.map(art => {
+          if(art.article_id === res.data.article.article_id){
+            return res.data.article
+          } else{
+            return art
+          }
+        }))
+        setCurrentArticleId(null)
       })
       .catch(err => console.error({err}))
   }
@@ -116,6 +126,8 @@ export default function App() {
     customAxios().delete(`/articles/${article_id}`)
       .then(res => {
         console.log(res)
+        articles.filter(art => art.article_id != res.data.id)
+        setMessage(res.data.message)
       })
       .catch(err => console.error({err}))
   }

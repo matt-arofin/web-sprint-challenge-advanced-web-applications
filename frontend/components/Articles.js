@@ -34,11 +34,11 @@ export default function Articles(props) {
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button disabled={true} onClick={e  => {
+                  <button disabled={currentArticleId ? true : false} onClick={e  => {
                     e.stopPropagation()
                     setCurrentArticleId(art.article_id)
                   }}>Edit</button>
-                  <button disabled={true} onClick={e => {
+                  <button disabled={currentArticleId ? true : false} onClick={e => {
                     e.stopPropagation()
                     deleteArticle(art.article_id)
                   }}>Delete</button>
