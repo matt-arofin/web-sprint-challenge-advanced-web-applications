@@ -29,8 +29,7 @@ export default function App() {
     // and a message saying "Goodbye!" should be set in its proper state.
     // In any case, we should redirect the browser back to the login screen,
     // using the helper above.
-    const token = localStorage.getItem("token")
-    if(token){
+    if(localStorage.getItem('token')){
       localStorage.removeItem("token")
       setMessage("Goodbye!")
     }
@@ -71,9 +70,9 @@ export default function App() {
     setSpinnerOn(true)
     customAxios().get('/articles')
       .then(res => {
-        console.log(res.data.articles)
+        // console.log(res.data.articles)
         setArticles(res.data.articles)
-        console.log("Current articles:", articles)
+        // console.log("Current articles:", articles)
         setMessage(res.data.message)
         setSpinnerOn(false)
       })
@@ -91,9 +90,16 @@ export default function App() {
     customAxios().post('/articles', article)
       .then(res => {
         console.log(res)
+        setMessage(res.data.message)
+        setArticles(...articles, article)
       })
-      .catch(err => console.error({err}))
+      .catch(err => {
+        console.error({err})
+        setMessage(err.response.data.message)
+      })
   }
+
+
 
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
@@ -130,7 +136,7 @@ export default function App() {
           <Route path="/" element={<LoginForm login={login} />} />
           <Route path="/articles" element={
             <AuthRoute>
-              <ArticleForm postArticle={postArticle} updateArticle={updateArticle} /* currentArticle={currentArticle} */ setCurrentArticleId={setCurrentArticleId}/>
+              <ArticleForm postArticle={postArticle} updateArticle={updateArticle} currentArticle={articles.find(a => a.article_id === currentArticleId)} setCurrentArticleId={setCurrentArticleId}/>
               <Articles articles={articles} getArticles={getArticles} deleteArticle={deleteArticle} currentArticleId={currentArticleId} setCurrentArticleId={setCurrentArticleId}/>
             </AuthRoute>
           } />
