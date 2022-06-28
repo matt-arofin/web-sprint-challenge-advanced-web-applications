@@ -41,6 +41,7 @@ export default function Articles(props) {
                   <button disabled={currentArticleId ? true : false} onClick={e => {
                     e.stopPropagation()
                     deleteArticle(art.article_id)
+                    // console.log(articles.filter(a => a.article_id != art.article_id))
                   }}>Delete</button>
                 </div>
               </div>

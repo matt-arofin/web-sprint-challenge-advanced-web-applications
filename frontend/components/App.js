@@ -21,7 +21,7 @@ export default function App() {
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate()
   const redirectToLogin = () => { navigate("/") }
-  const redirectToArticles = () => { navigate("/articles") }
+  // const redirectToArticles = () => { navigate("/articles") }
 
   const logout = () => {
     // ✨ implement
@@ -47,12 +47,12 @@ export default function App() {
     setSpinnerOn(true)
     customAxios().post('/login', {username, password})
       .then(res => {
-        setMessage(res.data.message)
         // console.log("Login Success:",res.data.message)
         localStorage.setItem("token", res.data.token)
+        setMessage(res.data.message)
         // console.log("Login success message state:", message)
-        redirectToArticles()
         setSpinnerOn(false)
+        navigate("/articles")
       })
       .catch(err => console.error({err}))
     }
@@ -91,7 +91,7 @@ export default function App() {
       .then(res => {
         console.log(res)
         setMessage(res.data.message)
-        setArticles(...articles, article)
+        setArticles([...articles, res.data.article])
       })
       .catch(err => {
         console.error({err})
@@ -126,8 +126,8 @@ export default function App() {
     customAxios().delete(`/articles/${article_id}`)
       .then(res => {
         console.log(res)
-        articles.filter(art => art.article_id != article_id)
         setMessage(res.data.message)
+        articles.filter(a => a.article_id != article_id)
       })
       .catch(err => console.error({err}))
   }
