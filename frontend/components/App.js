@@ -127,7 +127,7 @@ export default function App() {
       .then(res => {
         console.log(res)
         setMessage(res.data.message)
-        articles.filter(a => a.article_id != article_id)
+        setArticles(articles.filter(a => a.article_id != article_id))
       })
       .catch(err => console.error({err}))
   }
