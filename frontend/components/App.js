@@ -126,7 +126,7 @@ export default function App() {
     customAxios().delete(`/articles/${article_id}`)
       .then(res => {
         console.log(res)
-        articles.filter(art => art.article_id != res.data.id)
+        articles.filter(art => art.article_id != article_id)
         setMessage(res.data.message)
       })
       .catch(err => console.error({err}))
